@@ -1,14 +1,20 @@
 // Mean
 // SUM(Xi)/N
-function mu(dat) { var sum = 0; for (var i = dat.length - 1; i >= 0; i--) {	sum += dat[i]; }; return sum/dat.length; };
+function mu(dat) { var sum = 0; for (var i = dat.length - 1; i >= 0; i--) { sum += dat[i]; }; return sum/dat.length; };
 
 // Variance Sigma^2
 // (SUM(Xi-MX)^2)/N
-function varDat(dat) { var sigSQ = 0; for (var i = dat.length - 1; i >= 0; i--) {	sigSQ += Math.pow(dat[i]-mu(dat), 2); }; return sigSQ/dat.length; };
+function varDat(dat) { var sigSQ = 0; for (var i = dat.length - 1; i >= 0; i--) { sigSQ += Math.pow(dat[i]-mu(dat), 2); }; return sigSQ/dat.length; };
+
+// Standard deviation
+function stdDev(dat){ return Math.sqrt(varDat(dat)); };
+
+// 1/N*(SUM(Xi-MX)(Yi-MY))
+function covariance(datX, datY){ var cov = 0; for (var i = 0; i < datX.length; i++) { cov += (datX[i] - mu(datX))*(datY[i] - mu(datY)); }; return cov/datX.length; };
 
 // Standard Score
-// Zx = (Xi - MX)/VarianceX
-function z(dat){ _z = []; for (var i = 0; i < dat.length; i++) { _z.push((dat[i]-mu(dat))/varDat(dat)); }; return _z; };
+// Zx = (Xi - MX)/stddevX
+function z(dat){ _z = []; for (var i = 0; i < dat.length; i++) { _z.push((dat[i]-mu(dat))/stdDev(dat)); }; return _z; };
 
 
 // With a data set
@@ -65,6 +71,8 @@ function b(datX, datY) {
 	}; return num/den;
 };
 
+function b2(datX, datY){ return covariance(datX, datY)/varDat(datX); };
+
 function a(datX, datY) { return (mu(datY) - b(datX, datY)*mu(datX)); };
 
 
@@ -79,3 +87,6 @@ function r(datX, datY) {
 		num += deltaX*deltaY; denx += Math.pow(deltaX, 2); deny += Math.pow(deltaY, 2)
 	}; return num/Math.sqrt(denx*deny);	
 };
+
+// r
+function r2(datX, datY){ return (covariance(datX, datY)/(stdDev(datX))*(stdDev(datY))); };
