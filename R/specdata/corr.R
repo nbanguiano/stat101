@@ -1,6 +1,6 @@
 corr <- function(d, thr = 0) {
      
-     wd <- paste("D:/Users/nanguiano/Documents/Personal/Coursera/stat101/R/", d, sep = "")
+     wd <- paste("C:/Users/nanguiano/Documents/CODE/stat101/R/", d, sep = "")
      setwd(wd)
      
      ids <- 1:length(list.files(pattern = ".csv"))    
