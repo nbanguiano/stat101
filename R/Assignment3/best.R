@@ -6,29 +6,30 @@ best <- function(s, o) {
      ## Check if the state passed exists in the datase
      ## if not, throw an error and stop
      st <- dset$State
-     if (sum(grepl(s, st)) == 0) { message("Invalid State"); stop(); }
+     if (sum(grepl(s, st)) == 0) { stop("invalid state") }
      
-     ## Assign the desease passed to it's column
+     ## Assign the desease to its respective column number
      ## if it doesn't exist, stop
      if (o == "heart attack") {o <- 11;}
      else if (o == "heart failure") {o <- 17;}
      else if (o == "pneumonia") {o <- 23;}
-     else { message("Invalid Desease"); stop(); }
+     else { stop("Invalid Desease") }
      
      ## Split the data by states, and create lists
      ## then define hotels and outcome by state
      ## by subseting the data frame for that state "[[s]]"
-     HBS <- split(dset$Hospital.Name, st)
-     OBS <- split(dset[,o], st)
-     HBS <- HBS[[s]]; OBS <- OBS[[s]]
+     HBS <- split(dset$Hospital.Name, st)[[s]]
+     OBS <- as.numeric(split(dset[,o], st)[[s]])
      
      ## Make a logic vector where the outcome
      ## is equal to the minimum observation
      ## and get the matching hotel(s)
-     u <- OBS == min(OBS)
-     best <- HBS[u]
+     u <- OBS == min(OBS, na.rm = TRUE)
+     v <- is.na(u)
+     best <- HBS[!v][u[!v]]
      
-     browser()
-     ## Return the best hotel
-     return(best[!is.na(best)])
+     ## If there are severak tied sort them
+     ## alphabetically and return the best/first hotel
+     b <- sort(best[!is.na(best)])
+     return(b[1])
 }
